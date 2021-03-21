@@ -18,9 +18,9 @@ GPIO.setmode(GPIO.BCM)
 soil = 17
 GPIO.setup(soil, GPIO.IN)
 
-relay = 15
+relay = 23
 GPIO.setup(relay, GPIO.OUT)
-GPIO.output(relay, 1)
+GPIO.output(relay, False)
 
 #Soil_Moisture
 def get_status():
@@ -44,9 +44,9 @@ def DHT22_data():
 def pump(turn):
     global relay
     if turn == 1:
-        GPIO.output(relay, 1)
+        GPIO.setup(relay, GPIO.OUT)
     else:
-        GPIO.output(relay, 0)
+        GPIO.setup(relay, GPIO.IN)
 
 while True:
     try:
