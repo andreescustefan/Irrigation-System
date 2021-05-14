@@ -3,7 +3,6 @@ package com.example.kotliniot
 import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Handler
-import android.widget.Button
 import android.widget.TextView
 import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
@@ -15,16 +14,41 @@ import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
     private val handler = Handler()
-    private fun asd(x: TextView, y: TextView, z: TextView) {
+    private fun getAllData(x: TextView, y: TextView, z: TextView, a: TextView, b: TextView) {
          val runnable: Runnable = object : Runnable {
             override fun run() {
                 getData(x, "2", 2)
                 getData(y, "1", 1)
                 getData(z, "3", 3)
-                handler.postDelayed(this, 5000)
+                getData(a, "4", 4)
+                getData(b, "5", 5)
+
+                val textViewInfoAuto = findViewById<TextView>(R.id.textViewInfoAuto)
+                val textViewInfoPump = findViewById<TextView>(R.id.textViewInfoPump)
+                val toggleAuto = findViewById<ToggleButton>(R.id.toggleButton)
+                val togglePump = findViewById<ToggleButton>(R.id.toggleButtonPump)
+                val valueAuto = textViewInfoAuto.text.toString().toIntOrNull()
+                val valuePump = textViewInfoPump.text.toString().toIntOrNull()
+
+                if(valueAuto == 0){
+                    toggleAuto.isChecked = false
+                    togglePump.isEnabled = true
+                }
+                else if(valueAuto == 1){
+                    toggleAuto.isChecked = true
+                    togglePump.isEnabled = false
+                }
+                if(valuePump == 0){
+                    togglePump.isChecked = false
+                }
+                else if(valuePump == 1){
+                    togglePump.isChecked = true
+                }
+
+                handler.postDelayed(this, 20000)
             }
         }
-        handler.post(runnable);
+        handler.post(runnable)
     }
     private fun sendDada(field: String) {
         val asyncTask: AsyncTask<*, *, *> = object : AsyncTask<Any?, Any?, Any?>() {
@@ -65,20 +89,26 @@ class MainActivity : AppCompatActivity() {
                 val data = o.toString()
                 var hum: String
                 if(z == 2) {
-                    txt.text = (o.toString().substring(61, data.lastIndexOf("\""))) + " \u2103"
+                    txt.text = (o.toString().substring(data.lastIndexOf("\":\"")+3, data.lastIndexOf("\""))) + " \u2103"
                 }
                 if(z == 1) {
-                    hum = o.toString().substring(61, data.lastIndexOf("\"")) + "%"
+                    hum = o.toString().substring(data.lastIndexOf("\":\"")+3, data.lastIndexOf("\"")) + "%"
                     txt.text = hum
                 }
                 if(z ==3){
-                    val soil = o.toString().substring(61, data.lastIndexOf("\"")).toInt()
+                    val soil = o.toString().substring(data.lastIndexOf("\":\"")+3, data.lastIndexOf("\"")).toInt()
                     if(soil==0){
                         txt.text = "Dry"
                     }
                     else{
                         txt.text = "Wet"
                     }
+                }
+                if(z == 4) {
+                    txt.text = (o.toString().substring(data.lastIndexOf("\":\"")+3, data.lastIndexOf("\"")))
+                }
+                if(z == 5) {
+                    txt.text = (o.toString().substring(data.lastIndexOf("\":\"")+3, data.lastIndexOf("\"")))
                 }
             }
         }.execute()
@@ -87,26 +117,21 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val button = findViewById<Button>(R.id.button)
         val toggleAuto = findViewById<ToggleButton>(R.id.toggleButton)
         val togglePump = findViewById<ToggleButton>(R.id.toggleButtonPump)
         val textViewT = findViewById<TextView>(R.id.textViewTemp)
         val textViewH = findViewById<TextView>(R.id.textViewHum)
         val textViewDW = findViewById<TextView>(R.id.textViewSoil)
+        val textViewInfoAuto = findViewById<TextView>(R.id.textViewInfoAuto)
+        val textViewInfoPump = findViewById<TextView>(R.id.textViewInfoPump)
 
-        togglePump.isEnabled = false;
-        button.setOnClickListener {
-            getData(textViewT, "2", 2)
-            getData(textViewH, "1", 1)
-            getData(textViewDW, "3", 3)
-        }
         toggleAuto.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 sendDada("4=1")
-                togglePump.isEnabled = false;
+                togglePump.isEnabled = false
             } else {
                 sendDada("4=0")
-                togglePump.isEnabled = true;
+                togglePump.isEnabled = true
             }
         }
         togglePump.setOnCheckedChangeListener { _, isChecked ->
@@ -116,6 +141,8 @@ class MainActivity : AppCompatActivity() {
                 sendDada("5=0")
             }
         }
-        asd(textViewT, textViewH, textViewDW)
+
+        getAllData(textViewT, textViewH, textViewDW, textViewInfoAuto, textViewInfoPump)
+
     }
 }
