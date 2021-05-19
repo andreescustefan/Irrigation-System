@@ -6,12 +6,144 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <ToggleButton
+        android:id="@+id/toggleManual"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginStart="96dp"
+        android:layout_marginTop="264dp"
+        android:text="@string/togglebutton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewManual"
+        android:layout_width="70dp"
+        android:layout_height="22dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="272dp"
+        android:text="@string/manual"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewMode"
+        android:layout_width="160dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="204dp"
+        android:layout_marginTop="176dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ToggleButton
+        android:id="@+id/toggleSchedule"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginStart="104dp"
+        android:layout_marginTop="324dp"
+        android:text="@string/togglebutton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewSchedule"
+        android:layout_width="82dp"
+        android:layout_height="22dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="332dp"
+        android:text="@string/schedule"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <CheckBox
+        android:id="@+id/checkBoxSu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="312dp"
+        android:layout_marginTop="608dp"
+        android:text="@string/su"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <CheckBox
+        android:id="@+id/checkBoxFr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="216dp"
+        android:layout_marginTop="608dp"
+        android:text="@string/fr"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <CheckBox
+        android:id="@+id/checkBoxSa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="264dp"
+        android:layout_marginTop="608dp"
+        android:text="@string/sa"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <CheckBox
+        android:id="@+id/checkBoxTh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="168dp"
+        android:layout_marginTop="608dp"
+        android:text="@string/th"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <CheckBox
+        android:id="@+id/checkBoxWe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="116dp"
+        android:layout_marginTop="608dp"
+        android:text="@string/we"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <CheckBox
+        android:id="@+id/checkBoxTu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="68dp"
+        android:layout_marginTop="608dp"
+        android:text="@string/tu"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TimePicker
+        android:id="@+id/durationPicker"
+        android:layout_width="153dp"
+        android:layout_height="83dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="204dp"
+        android:layout_marginTop="464dp"
+        android:timePickerMode="spinner"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewTypeDuration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="496dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/textViewTemp"
         android:layout_width="60dp"
         android:layout_height="22dp"
         android:layout_marginStart="107dp"
-        android:layout_marginLeft="107dp"
         android:layout_marginTop="50dp"
         android:text=""
         app:layout_constraintStart_toStartOf="parent"
@@ -22,7 +154,6 @@
         android:layout_width="86dp"
         android:layout_height="22dp"
         android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
         android:layout_marginTop="50dp"
         android:text="@string/string_temperature"
         app:layout_constraintStart_toStartOf="parent"
@@ -33,7 +164,6 @@
         android:layout_width="61dp"
         android:layout_height="22dp"
         android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
         android:layout_marginTop="100dp"
         android:text="@string/humidity"
         app:layout_constraintStart_toStartOf="parent"
@@ -44,10 +174,8 @@
         android:layout_width="60dp"
         android:layout_height="22dp"
         android:layout_marginStart="83dp"
-        android:layout_marginLeft="83dp"
         android:layout_marginTop="100dp"
         android:layout_marginEnd="252dp"
-        android:layout_marginRight="252dp"
         android:layout_marginBottom="700dp"
         android:text=""
         app:layout_constraintBottom_toBottomOf="parent"
@@ -62,7 +190,6 @@
         android:layout_width="56dp"
         android:layout_height="22dp"
         android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
         android:layout_marginTop="150dp"
         android:text="@string/dry_wet"
         app:layout_constraintStart_toStartOf="parent"
@@ -73,18 +200,16 @@
         android:layout_width="60dp"
         android:layout_height="22dp"
         android:layout_marginStart="77dp"
-        android:layout_marginLeft="77dp"
         android:layout_marginTop="150dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ToggleButton
-        android:id="@+id/toggleButton"
+        android:id="@+id/toggleAuto"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginLeft="80dp"
-        android:layout_marginTop="392dp"
+        android:layout_marginStart="76dp"
+        android:layout_marginTop="196dp"
         android:checked="true"
         android:text="@string/toggle"
         app:layout_constraintStart_toStartOf="parent"
@@ -94,9 +219,8 @@
         android:id="@+id/textViewAuto"
         android:layout_width="53dp"
         android:layout_height="20dp"
-        android:layout_marginStart="23dp"
-        android:layout_marginLeft="23dp"
-        android:layout_marginTop="400dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="204dp"
         android:text="@string/auto"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textSize="18sp"
@@ -107,9 +231,8 @@
         android:id="@+id/textViewPump"
         android:layout_width="53dp"
         android:layout_height="20dp"
-        android:layout_marginStart="23dp"
-        android:layout_marginLeft="23dp"
-        android:layout_marginTop="460dp"
+        android:layout_marginStart="236dp"
+        android:layout_marginTop="272dp"
         android:text="@string/pump"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textSize="18sp"
@@ -117,12 +240,11 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ToggleButton
-        android:id="@+id/toggleButtonPump"
+        android:id="@+id/togglePump"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginLeft="80dp"
-        android:layout_marginTop="452dp"
+        android:layout_marginStart="296dp"
+        android:layout_marginTop="264dp"
         android:text="@string/togglebutton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -131,9 +253,8 @@
         android:id="@+id/textViewInfoAuto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="204dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -143,13 +264,72 @@
         android:id="@+id/textViewInfoPump"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="244dp"
+        android:layout_marginStart="80dp"
+        android:layout_marginTop="16dp"
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
+    <TextView
+        android:id="@+id/textViewStartTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="404dp"
+        android:text="@string/start_time"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewRepeat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="560dp"
+        android:text="@string/repeat_on"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewTypeTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="88dp"
+        android:layout_marginTop="404dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TimePicker
+        android:id="@+id/timePicker"
+        android:layout_width="153dp"
+        android:layout_height="83dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="204dp"
+        android:layout_marginTop="372dp"
+        android:timePickerMode="spinner"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewDuration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="496dp"
+        android:text="@string/duration"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <CheckBox
+        android:id="@+id/checkBoxMo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="608dp"
+        android:text="@string/mo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
