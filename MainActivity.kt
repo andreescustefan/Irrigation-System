@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.squareup.okhttp.OkHttpClient
@@ -18,19 +19,31 @@ import java.io.IOException
 
 class MainActivity : AppCompatActivity(){
     private val handler = Handler()
+    private val hand = Handler()
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        getInitialState()
         onClickTime()
         onClickDuration()
 
+        val buttonSync = findViewById<Button>(R.id.buttonSync)
+
+        buttonSync.setOnClickListener {
+            getInitialState()
+        }
         toggleAuto.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 sendData("4=1")
                 toggleManual.isChecked = false
                 toggleSchedule.isChecked = false
+                //verify(1)
+                ver1()
+                textViewMode.text = "Auto mode"
+                textViewMode.setTextColor(Color.RED)
             }
         }
         toggleManual.setOnCheckedChangeListener { _, isChecked ->
@@ -39,6 +52,10 @@ class MainActivity : AppCompatActivity(){
                 toggleAuto.isChecked = false
                 toggleSchedule.isChecked = false
                 turnManualOptions(1)
+                //verify(0)
+                ver()
+                textViewMode.text = "Manual mode"
+                textViewMode.setTextColor(Color.RED)
             }
             else{
                 turnManualOptions(0)
@@ -47,11 +64,13 @@ class MainActivity : AppCompatActivity(){
         toggleSchedule.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 sendData("4=2")
-
                 toggleAuto.isChecked = false
                 toggleManual.isChecked = false
-
                 turnScheduleOptions(1)
+                //verify(2)
+                ver2()
+                textViewMode.text = "Schedule mode"
+                textViewMode.setTextColor(Color.RED)
             }
             else {
                 turnScheduleOptions(0)
@@ -60,71 +79,183 @@ class MainActivity : AppCompatActivity(){
         togglePump.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 sendData("5=1")
+                //verify(3)
             } else {
                 sendData("5=0")
+                //verify(4)
             }
         }
         getAllData()
+    }
+    private fun ver(){
+        val runnable: Runnable = object : Runnable {
+            override fun run() {
+                getData(textViewInfoAuto, "4", 4)
+                val valueAuto = textViewInfoAuto.text.toString().toIntOrNull()
+                if(valueAuto == 0){
+                    hand.removeCallbacks(this)
+                }
+                sendData("4=0")
+                hand.postDelayed(this, 2000)
+            }
+        }
+        hand.post(runnable)
+    }
+    private fun ver1(){
+        val runnable: Runnable = object : Runnable {
+            override fun run() {
+                getData(textViewInfoAuto, "4", 4)
+                val valueAuto = textViewInfoAuto.text.toString().toIntOrNull()
+                if(valueAuto == 1){
+                    hand.removeCallbacks(this)
+                }
+                sendData("4=1")
+                hand.postDelayed(this, 2000)
+            }
+        }
+        hand.post(runnable)
+    }
+    private fun ver2(){
+        val runnable: Runnable = object : Runnable {
+            override fun run() {
+                getData(textViewInfoAuto, "4", 4)
+                val valueAuto = textViewInfoAuto.text.toString().toIntOrNull()
+                if(valueAuto == 2){
+                    hand.removeCallbacks(this)
+                }
+                sendData("4=2")
+                hand.postDelayed(this, 2000)
+            }
+        }
+        hand.post(runnable)
+    }
+    private fun verify(id: Int) {
+        if (id == 0) {
+            var verified = 0
+            while (verified == 0) {
+                getData(textViewInfoAuto, "4", 4)
+                val valueAuto = textViewInfoAuto.text.toString().toIntOrNull()
+                verified = if (valueAuto == 0) {
+                    1
+                } else {
+                    0
+                }
+                Handler().postDelayed({
+                    sendData("4=0")
+                }, 5000)
+            }
+        }
+        if (id == 1) {
+            var verified = 0
+            while (verified == 0) {
+                getData(textViewInfoAuto, "4", 4)
+                val valueAuto = textViewInfoAuto.text.toString().toIntOrNull()
+                verified = if (valueAuto == 1) {
+                    1
+                } else {
+                    0
+                }
+                sendData("4=1")
+            }
+        }
+        if (id == 2) {
+            var verified = 0
+            while (verified == 0) {
+                getData(textViewInfoAuto, "4", 4)
+                val valueAuto = textViewInfoAuto.text.toString().toIntOrNull()
+                verified = if (valueAuto == 2) {
+                    1
+                } else {
+                    0
+                }
+                sendData("4=2")
+            }
+        }
+        if (id == 3) {
+            var verified = 0
+            while (verified == 0) {
+                getData(textViewInfoPump, "5", 5)
+                val valuePump = textViewInfoPump.text.toString().toIntOrNull()
+                verified = if (valuePump == 1) {
+                    1
+                } else {
+                    0
+                }
+                sendData("5=1")
+            }
+        }
+        if (id == 4) {
+            var verified = 0
+            while (verified == 0) {
+                getData(textViewInfoPump, "5", 5)
+                val valuePump = textViewInfoPump.text.toString().toIntOrNull()
+                verified = if (valuePump == 0) {
+                    1
+                } else {
+                    0
+                }
+                sendData("5=0")
+            }
+        }
+    }
+    @SuppressLint("SetTextI18n")
+    private fun getInitialState(){
+        getData(textViewInfoAuto, "4", 4)
+        getData(textViewInfoPump, "5", 5)
 
+        val valueAuto = textViewInfoAuto.text.toString().toIntOrNull()
+        val valuePump = textViewInfoPump.text.toString().toIntOrNull()
+
+        if(valueAuto == 0){
+            toggleManual.isChecked = true
+            toggleAuto.isChecked = false
+            toggleSchedule.isChecked = false
+
+            turnManualOptions(1)
+            turnScheduleOptions(0)
+
+            textViewMode.text = "Manual mode"
+            textViewMode.setTextColor(Color.RED)
+        }
+        else if(valueAuto == 1){
+            toggleManual.isChecked = false
+            toggleAuto.isChecked = true
+            toggleSchedule.isChecked = false
+
+            turnManualOptions(0)
+            turnScheduleOptions(0)
+
+            textViewMode.text = "Auto mode"
+            textViewMode.setTextColor(Color.RED)
+        }
+        else if(valueAuto == 2){
+            toggleManual.isChecked = false
+            toggleAuto.isChecked = false
+            toggleSchedule.isChecked = true
+
+            turnManualOptions(0)
+            turnScheduleOptions(1)
+
+            textViewMode.text = "Schedule mode"
+            textViewMode.setTextColor(Color.RED)
+        }
+        if(valuePump == 0){
+            togglePump.isChecked = false
+        }
+        else if(valuePump == 1){
+            togglePump.isChecked = true
+        }
     }
     private fun getAllData() {
         val runnable: Runnable = object : Runnable {
-            @SuppressLint("SetTextI18n")
             override fun run() {
                 getData(textViewTemp, "2", 2)
                 getData(textViewHum, "1", 1)
                 getData(textViewSoil, "3", 3)
-                getData(textViewInfoAuto, "4", 4)
-                getData(textViewInfoPump, "5", 5)
-
-                val valueAuto = textViewInfoAuto.text.toString().toIntOrNull()
-                val valuePump = textViewInfoPump.text.toString().toIntOrNull()
-
-                if(valueAuto == 0){
-                    toggleManual.isChecked = true
-                    toggleAuto.isChecked = false
-                    toggleSchedule.isChecked = false
-
-                    turnManualOptions(1)
-                    turnScheduleOptions(0)
-
-                    textViewMode.text = "Manual mode"
-                    textViewMode.setTextColor(Color.RED)
-                }
-                else if(valueAuto == 1){
-                    toggleManual.isChecked = false
-                    toggleAuto.isChecked = true
-                    toggleSchedule.isChecked = false
-
-                    turnManualOptions(0)
-                    turnScheduleOptions(0)
-
-                    textViewMode.text = "Auto mode"
-                    textViewMode.setTextColor(Color.RED)
-                }
-                else if(valueAuto == 2){
-                    toggleManual.isChecked = false
-                    toggleAuto.isChecked = false
-                    toggleSchedule.isChecked = true
-
-                    turnManualOptions(0)
-                    turnScheduleOptions(1)
-
-                    textViewMode.text = "Schedule mode"
-                    textViewMode.setTextColor(Color.RED)
-                }
-                if(valuePump == 0){
-                    togglePump.isChecked = false
-                }
-                else if(valuePump == 1){
-                    togglePump.isChecked = true
-                }
-
-                handler.postDelayed(this, 20000)
+                handler.postDelayed(this, 2000)
             }
         }
         handler.post(runnable)
-
     }
     private fun sendData(field: String) {
         val asyncTask: AsyncTask<*, *, *> = object : AsyncTask<Any?, Any?, Any?>() {
