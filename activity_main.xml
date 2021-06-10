@@ -6,55 +6,165 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <ToggleButton
-        android:id="@+id/toggleManual"
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/buttonSendPumpOn"
+        android:layout_width="100dp"
         android:layout_height="40dp"
-        android:layout_marginStart="96dp"
-        android:layout_marginTop="264dp"
-        android:text="@string/togglebutton"
+        android:layout_marginStart="176dp"
+        android:layout_marginLeft="176dp"
+        android:layout_marginTop="164dp"
+        android:text="Pump_On"
+        android:textSize="10sp"
+        app:backgroundTint="#3F51B5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/textViewManual"
-        android:layout_width="70dp"
-        android:layout_height="22dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="272dp"
-        android:text="@string/manual"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textSize="18sp"
+    <Button
+        android:id="@+id/buttonSendPumpOff"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="284dp"
+        android:layout_marginLeft="284dp"
+        android:layout_marginTop="164dp"
+        android:text="Pump_Off"
+        android:textSize="10sp"
+        app:backgroundTint="#3F51B5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/buttonSendStart"
+        android:layout_width="75dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="264dp"
+        android:layout_marginLeft="264dp"
+        android:layout_marginTop="280dp"
+        android:background="#2B2B2B"
+        android:text="@string/send"
+        android:textColor="@color/white"
+        app:backgroundTint="#82B1FF"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/buttonSendAuto"
+        android:layout_width="120dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="116dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="Set_Auto"
+        android:textSize="10sp"
+        app:backgroundTint="#3F51B5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/buttonSave"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:layout_marginStart="276dp"
+        android:layout_marginLeft="276dp"
+        android:layout_marginTop="492dp"
+        android:text="Save"
+        app:backgroundTint="#82B1FF"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/buttonConfigure"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="492dp"
+        android:text="Configure"
+        app:backgroundTint="#82B1FF"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/buttonSendDuration"
+        android:layout_width="75dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="264dp"
+        android:layout_marginLeft="264dp"
+        android:layout_marginTop="400dp"
+        android:text="@string/send"
+        app:backgroundTint="#82B1FF"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/buttonSendManual"
+        android:layout_width="120dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="164dp"
+        android:text="Set_Manual"
+        android:textSize="10sp"
+        app:backgroundTint="#3F51B5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/buttonSendSchedule"
+        android:layout_width="120dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="212dp"
+        android:text="Set_Schedule"
+        android:textSize="10sp"
+        app:backgroundTint="#3F51B5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <NumberPicker
+        android:id="@+id/numberPickerStartHour"
+        android:layout_width="65dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="192dp"
+        android:layout_marginLeft="192dp"
+        android:layout_marginTop="252dp"
+        android:layout_weight="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <NumberPicker
+        android:id="@+id/numberPickerDurationHour"
+        android:layout_width="65dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="192dp"
+        android:layout_marginLeft="192dp"
+        android:layout_marginTop="376dp"
+        android:layout_weight="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/textViewInfoSchedule"
+        android:layout_width="6dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="352dp"
+        android:layout_marginLeft="352dp"
+        android:layout_marginTop="60dp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="invisible" />
 
     <TextView
         android:id="@+id/textViewMode"
         android:layout_width="160dp"
         android:layout_height="25dp"
-        android:layout_marginStart="204dp"
-        android:layout_marginTop="176dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ToggleButton
-        android:id="@+id/toggleSchedule"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_marginStart="104dp"
-        android:layout_marginTop="324dp"
-        android:text="@string/togglebutton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textViewSchedule"
-        android:layout_width="82dp"
-        android:layout_height="22dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="332dp"
-        android:text="@string/schedule"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:layout_marginStart="116dp"
+        android:layout_marginLeft="116dp"
+        android:layout_marginTop="4dp"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -63,8 +173,9 @@
         android:id="@+id/checkBoxSu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="312dp"
-        android:layout_marginTop="608dp"
+        android:layout_marginStart="316dp"
+        android:layout_marginLeft="316dp"
+        android:layout_marginTop="552dp"
         android:text="@string/su"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -73,8 +184,9 @@
         android:id="@+id/checkBoxFr"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="216dp"
-        android:layout_marginTop="608dp"
+        android:layout_marginStart="220dp"
+        android:layout_marginLeft="220dp"
+        android:layout_marginTop="552dp"
         android:text="@string/fr"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -83,8 +195,9 @@
         android:id="@+id/checkBoxSa"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="264dp"
-        android:layout_marginTop="608dp"
+        android:layout_marginStart="268dp"
+        android:layout_marginLeft="268dp"
+        android:layout_marginTop="552dp"
         android:text="@string/sa"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -93,8 +206,9 @@
         android:id="@+id/checkBoxTh"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="168dp"
-        android:layout_marginTop="608dp"
+        android:layout_marginStart="172dp"
+        android:layout_marginLeft="172dp"
+        android:layout_marginTop="552dp"
         android:text="@string/th"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -103,8 +217,9 @@
         android:id="@+id/checkBoxWe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="116dp"
-        android:layout_marginTop="608dp"
+        android:layout_marginStart="120dp"
+        android:layout_marginLeft="120dp"
+        android:layout_marginTop="552dp"
         android:text="@string/we"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -113,20 +228,10 @@
         android:id="@+id/checkBoxTu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="68dp"
-        android:layout_marginTop="608dp"
+        android:layout_marginStart="72dp"
+        android:layout_marginLeft="72dp"
+        android:layout_marginTop="552dp"
         android:text="@string/tu"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TimePicker
-        android:id="@+id/durationPicker"
-        android:layout_width="153dp"
-        android:layout_height="83dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="204dp"
-        android:layout_marginTop="464dp"
-        android:timePickerMode="spinner"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -134,8 +239,9 @@
         android:id="@+id/textViewTypeDuration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="496dp"
+        android:layout_marginStart="84dp"
+        android:layout_marginLeft="84dp"
+        android:layout_marginTop="416dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -143,8 +249,9 @@
         android:id="@+id/textViewTemp"
         android:layout_width="60dp"
         android:layout_height="22dp"
-        android:layout_marginStart="107dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginStart="112dp"
+        android:layout_marginLeft="112dp"
+        android:layout_marginTop="36dp"
         android:text=""
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -154,7 +261,8 @@
         android:layout_width="86dp"
         android:layout_height="22dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="36dp"
         android:text="@string/string_temperature"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -164,7 +272,8 @@
         android:layout_width="61dp"
         android:layout_height="22dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="60dp"
         android:text="@string/humidity"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -173,24 +282,20 @@
         android:id="@+id/textViewHum"
         android:layout_width="60dp"
         android:layout_height="22dp"
-        android:layout_marginStart="83dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginEnd="252dp"
-        android:layout_marginBottom="700dp"
+        android:layout_marginStart="84dp"
+        android:layout_marginLeft="84dp"
+        android:layout_marginTop="60dp"
         android:text=""
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textViewSoilMoisture"
         android:layout_width="56dp"
         android:layout_height="22dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="150dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="84dp"
         android:text="@string/dry_wet"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -199,31 +304,9 @@
         android:id="@+id/textViewSoil"
         android:layout_width="60dp"
         android:layout_height="22dp"
-        android:layout_marginStart="77dp"
-        android:layout_marginTop="150dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ToggleButton
-        android:id="@+id/toggleAuto"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_marginStart="76dp"
-        android:layout_marginTop="196dp"
-        android:checked="true"
-        android:text="@string/toggle"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textViewAuto"
-        android:layout_width="53dp"
-        android:layout_height="20dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="204dp"
-        android:text="@string/auto"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textSize="18sp"
+        android:layout_marginStart="80dp"
+        android:layout_marginLeft="80dp"
+        android:layout_marginTop="84dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -231,63 +314,47 @@
         android:id="@+id/textViewPump"
         android:layout_width="53dp"
         android:layout_height="20dp"
-        android:layout_marginStart="236dp"
-        android:layout_marginTop="272dp"
+        android:layout_marginStart="204dp"
+        android:layout_marginLeft="204dp"
+        android:layout_marginTop="116dp"
         android:text="@string/pump"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ToggleButton
-        android:id="@+id/togglePump"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_marginStart="296dp"
-        android:layout_marginTop="264dp"
-        android:text="@string/togglebutton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <TextView
         android:id="@+id/textViewInfoAuto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
-        android:visibility="visible"
+        android:layout_width="13dp"
+        android:layout_height="17dp"
+        android:layout_marginStart="356dp"
+        android:layout_marginLeft="356dp"
+        android:layout_marginTop="92dp"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible" />
+        tools:visibility="invisible" />
 
     <TextView
         android:id="@+id/textViewInfoPump"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="16dp"
-        android:visibility="visible"
+        android:layout_width="8dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="360dp"
+        android:layout_marginLeft="360dp"
+        android:layout_marginTop="36dp"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible" />
+        tools:visibility="invisible" />
 
     <TextView
         android:id="@+id/textViewStartTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="404dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="292dp"
         android:text="@string/start_time"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textViewRepeat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="560dp"
-        android:text="@string/repeat_on"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -295,19 +362,9 @@
         android:id="@+id/textViewTypeTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="88dp"
-        android:layout_marginTop="404dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TimePicker
-        android:id="@+id/timePicker"
-        android:layout_width="153dp"
-        android:layout_height="83dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="204dp"
-        android:layout_marginTop="372dp"
-        android:timePickerMode="spinner"
+        android:layout_marginStart="96dp"
+        android:layout_marginLeft="96dp"
+        android:layout_marginTop="292dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -315,8 +372,9 @@
         android:id="@+id/textViewDuration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="496dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="416dp"
         android:text="@string/duration"
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
@@ -326,8 +384,9 @@
         android:id="@+id/checkBoxMo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="608dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="552dp"
         android:text="@string/mo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -336,9 +395,11 @@
         android:id="@+id/buttonSync"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="224dp"
-        android:layout_marginTop="52dp"
+        android:layout_marginStart="248dp"
+        android:layout_marginLeft="248dp"
+        android:layout_marginTop="44dp"
         android:text="@string/sync"
+        app:backgroundTint="#3F51B5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

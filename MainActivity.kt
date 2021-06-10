@@ -6,9 +6,8 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.squareup.okhttp.OkHttpClient
 import com.squareup.okhttp.Request
@@ -19,7 +18,6 @@ import java.io.IOException
 
 class MainActivity : AppCompatActivity(){
     private val handler = Handler()
-    private val hand = Handler()
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,175 +25,178 @@ class MainActivity : AppCompatActivity(){
         setContentView(R.layout.activity_main)
 
         getInitialState()
-        onClickTime()
-        onClickDuration()
-
-        val buttonSync = findViewById<Button>(R.id.buttonSync)
-
+        if (numberPickerStartHour != null) {
+            numberPickerStartHour.minValue = 0
+            numberPickerStartHour.maxValue = 24
+            numberPickerStartHour.wrapSelectorWheel = true
+            numberPickerStartHour.setOnValueChangedListener { picker, oldVal, newVal ->
+                val text = "Changed from $oldVal to $newVal"
+                textViewTypeTime.text = "$newVal"
+                Toast.makeText(this@MainActivity, text, Toast.LENGTH_SHORT).show()
+            }
+        }
+        if (numberPickerDurationHour != null) {
+            numberPickerDurationHour.minValue = 0
+            numberPickerDurationHour.maxValue = 50
+            numberPickerDurationHour.wrapSelectorWheel = true
+            numberPickerDurationHour.setOnValueChangedListener { picker, oldVal, newVal ->
+                val text = "Changed from $oldVal to $newVal"
+                textViewTypeDuration.text = "$newVal"
+                Toast.makeText(this@MainActivity, text, Toast.LENGTH_SHORT).show()
+            }
+        }
+        buttonConfigure.setOnClickListener {
+            sendDataSchedule("8=0")
+            verifySch("8=0")
+        }
+        buttonSave.setOnClickListener {
+            sendDataSchedule("8=1")
+            verifySch("8=1")
+        }
+        buttonSendStart.setOnClickListener {
+            var hour = textViewTypeTime.text
+            sendData("6=$hour")
+            verify("6=$hour")
+        }
+        buttonSendDuration.setOnClickListener {
+            var hour = textViewTypeDuration.text
+            sendData("7=$hour")
+            verify("7=$hour")
+        }
         buttonSync.setOnClickListener {
             getInitialState()
         }
-        toggleAuto.setOnCheckedChangeListener { _, isChecked ->
+        buttonSync.performClick()
+        buttonSendAuto.setOnClickListener {
+            sendData("4=1")
+            verify("4=1")
+            textViewMode.text = "Auto mode"
+            textViewMode.setTextColor(Color.RED)
+            turnManualOptions(0)
+            turnScheduleOptions(0)
+            buttonSendManual.setBackgroundColor(Color.RED)
+            buttonSendAuto.setBackgroundColor(Color.GREEN)
+            buttonSendSchedule.setBackgroundColor(Color.RED)
+        }
+        buttonSendManual.setOnClickListener {
+            sendData("4=0")
+            verify("4=0")
+            textViewMode.text = "Manual mode"
+            textViewMode.setTextColor(Color.RED)
+            turnManualOptions(1)
+            turnScheduleOptions(0)
+            buttonSendManual.setBackgroundColor(Color.GREEN)
+            buttonSendAuto.setBackgroundColor(Color.RED)
+            buttonSendSchedule.setBackgroundColor(Color.RED)
+
+        }
+        buttonSendSchedule.setOnClickListener {
+            sendData("4=2")
+            verify("4=2")
+            textViewMode.text = "Schedule mode"
+            textViewMode.setTextColor(Color.RED)
+            turnScheduleOptions(1)
+            turnManualOptions(0)
+            buttonSendManual.setBackgroundColor(Color.RED)
+            buttonSendAuto.setBackgroundColor(Color.RED)
+            buttonSendSchedule.setBackgroundColor(Color.GREEN)
+        }
+        buttonSendPumpOn.setOnClickListener {
+            sendData("5=1")
+            verify("5=1")
+            buttonSendPumpOff.setBackgroundColor(Color.RED)
+            buttonSendPumpOn.setBackgroundColor(Color.GREEN)
+            }
+        buttonSendPumpOff.setOnClickListener {
+            sendData("5=0")
+            verify("5=0")
+            buttonSendPumpOff.setBackgroundColor(Color.GREEN)
+            buttonSendPumpOn.setBackgroundColor(Color.RED)
+        }
+        checkBoxMo.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                sendData("4=1")
-                toggleManual.isChecked = false
-                toggleSchedule.isChecked = false
-                //verify(1)
-                ver1()
-                textViewMode.text = "Auto mode"
-                textViewMode.setTextColor(Color.RED)
+                sendDataSchedule("1=11")
+                verifySch("1=11")
+            }
+            if (!isChecked) {
+                sendDataSchedule("1=10")
+                verifySch("1=10")
             }
         }
-        toggleManual.setOnCheckedChangeListener { _, isChecked ->
+        checkBoxTu.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                sendData("4=0")
-                toggleAuto.isChecked = false
-                toggleSchedule.isChecked = false
-                turnManualOptions(1)
-                //verify(0)
-                ver()
-                textViewMode.text = "Manual mode"
-                textViewMode.setTextColor(Color.RED)
+                sendDataSchedule("2=21")
+                verifySch("2=21")
             }
-            else{
-                turnManualOptions(0)
+            if (!isChecked) {
+                sendDataSchedule("2=20")
+                verifySch("2=20")
             }
         }
-        toggleSchedule.setOnCheckedChangeListener { _, isChecked ->
+        checkBoxWe.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                sendData("4=2")
-                toggleAuto.isChecked = false
-                toggleManual.isChecked = false
-                turnScheduleOptions(1)
-                //verify(2)
-                ver2()
-                textViewMode.text = "Schedule mode"
-                textViewMode.setTextColor(Color.RED)
+                sendDataSchedule("3=31")
+                verifySch("3=31")
             }
-            else {
-                turnScheduleOptions(0)
+            if (!isChecked) {
+                sendDataSchedule("3=30")
+                verifySch("3=30")
             }
         }
-        togglePump.setOnCheckedChangeListener { _, isChecked ->
+        checkBoxTh.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                sendData("5=1")
-                //verify(3)
-            } else {
-                sendData("5=0")
-                //verify(4)
+                sendDataSchedule("4=41")
+                verifySch("4=41")
+            }
+            if (!isChecked) {
+                sendDataSchedule("4=40")
+                verifySch("4=40")
+            }
+        }
+        checkBoxFr.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                sendDataSchedule("5=51")
+                verifySch("5=51")
+            }
+            if (!isChecked) {
+                sendDataSchedule("5=50")
+                verifySch("5=50")
+            }
+        }
+        checkBoxSa.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                sendDataSchedule("6=61")
+                verifySch("6=61")
+            }
+            if (!isChecked) {
+                sendDataSchedule("6=60")
+                verifySch("6=60")
+            }
+        }
+        checkBoxSu.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                sendDataSchedule("7=71")
+                verifySch("7=71")
+            }
+            if (!isChecked) {
+                sendDataSchedule("7=70")
+                verifySch("7=70")
             }
         }
         getAllData()
     }
-    private fun ver(){
-        val runnable: Runnable = object : Runnable {
-            override fun run() {
-                getData(textViewInfoAuto, "4", 4)
-                val valueAuto = textViewInfoAuto.text.toString().toIntOrNull()
-                if(valueAuto == 0){
-                    hand.removeCallbacks(this)
-                }
-                sendData("4=0")
-                hand.postDelayed(this, 2000)
-            }
+    private fun verify(field: String){
+        for(i in 3 downTo 0)
+        {
+            sendData(field)
+            Thread.sleep(16_000)
         }
-        hand.post(runnable)
     }
-    private fun ver1(){
-        val runnable: Runnable = object : Runnable {
-            override fun run() {
-                getData(textViewInfoAuto, "4", 4)
-                val valueAuto = textViewInfoAuto.text.toString().toIntOrNull()
-                if(valueAuto == 1){
-                    hand.removeCallbacks(this)
-                }
-                sendData("4=1")
-                hand.postDelayed(this, 2000)
-            }
-        }
-        hand.post(runnable)
-    }
-    private fun ver2(){
-        val runnable: Runnable = object : Runnable {
-            override fun run() {
-                getData(textViewInfoAuto, "4", 4)
-                val valueAuto = textViewInfoAuto.text.toString().toIntOrNull()
-                if(valueAuto == 2){
-                    hand.removeCallbacks(this)
-                }
-                sendData("4=2")
-                hand.postDelayed(this, 2000)
-            }
-        }
-        hand.post(runnable)
-    }
-    private fun verify(id: Int) {
-        if (id == 0) {
-            var verified = 0
-            while (verified == 0) {
-                getData(textViewInfoAuto, "4", 4)
-                val valueAuto = textViewInfoAuto.text.toString().toIntOrNull()
-                verified = if (valueAuto == 0) {
-                    1
-                } else {
-                    0
-                }
-                Handler().postDelayed({
-                    sendData("4=0")
-                }, 5000)
-            }
-        }
-        if (id == 1) {
-            var verified = 0
-            while (verified == 0) {
-                getData(textViewInfoAuto, "4", 4)
-                val valueAuto = textViewInfoAuto.text.toString().toIntOrNull()
-                verified = if (valueAuto == 1) {
-                    1
-                } else {
-                    0
-                }
-                sendData("4=1")
-            }
-        }
-        if (id == 2) {
-            var verified = 0
-            while (verified == 0) {
-                getData(textViewInfoAuto, "4", 4)
-                val valueAuto = textViewInfoAuto.text.toString().toIntOrNull()
-                verified = if (valueAuto == 2) {
-                    1
-                } else {
-                    0
-                }
-                sendData("4=2")
-            }
-        }
-        if (id == 3) {
-            var verified = 0
-            while (verified == 0) {
-                getData(textViewInfoPump, "5", 5)
-                val valuePump = textViewInfoPump.text.toString().toIntOrNull()
-                verified = if (valuePump == 1) {
-                    1
-                } else {
-                    0
-                }
-                sendData("5=1")
-            }
-        }
-        if (id == 4) {
-            var verified = 0
-            while (verified == 0) {
-                getData(textViewInfoPump, "5", 5)
-                val valuePump = textViewInfoPump.text.toString().toIntOrNull()
-                verified = if (valuePump == 0) {
-                    1
-                } else {
-                    0
-                }
-                sendData("5=0")
-            }
+    private fun verifySch(field: String){
+        for(i in 3 downTo 0)
+        {
+            sendDataSchedule(field)
+            Thread.sleep(16_000)
         }
     }
     @SuppressLint("SetTextI18n")
@@ -207,9 +208,9 @@ class MainActivity : AppCompatActivity(){
         val valuePump = textViewInfoPump.text.toString().toIntOrNull()
 
         if(valueAuto == 0){
-            toggleManual.isChecked = true
-            toggleAuto.isChecked = false
-            toggleSchedule.isChecked = false
+            buttonSendManual.setBackgroundColor(Color.GREEN)
+            buttonSendAuto.setBackgroundColor(Color.RED)
+            buttonSendSchedule.setBackgroundColor(Color.RED)
 
             turnManualOptions(1)
             turnScheduleOptions(0)
@@ -217,10 +218,10 @@ class MainActivity : AppCompatActivity(){
             textViewMode.text = "Manual mode"
             textViewMode.setTextColor(Color.RED)
         }
-        else if(valueAuto == 1){
-            toggleManual.isChecked = false
-            toggleAuto.isChecked = true
-            toggleSchedule.isChecked = false
+        if(valueAuto == 1){
+            buttonSendManual.setBackgroundColor(Color.RED)
+            buttonSendAuto.setBackgroundColor(Color.GREEN)
+            buttonSendSchedule.setBackgroundColor(Color.RED)
 
             turnManualOptions(0)
             turnScheduleOptions(0)
@@ -228,10 +229,10 @@ class MainActivity : AppCompatActivity(){
             textViewMode.text = "Auto mode"
             textViewMode.setTextColor(Color.RED)
         }
-        else if(valueAuto == 2){
-            toggleManual.isChecked = false
-            toggleAuto.isChecked = false
-            toggleSchedule.isChecked = true
+        if(valueAuto == 2){
+            buttonSendManual.setBackgroundColor(Color.RED)
+            buttonSendAuto.setBackgroundColor(Color.RED)
+            buttonSendSchedule.setBackgroundColor(Color.GREEN)
 
             turnManualOptions(0)
             turnScheduleOptions(1)
@@ -240,10 +241,12 @@ class MainActivity : AppCompatActivity(){
             textViewMode.setTextColor(Color.RED)
         }
         if(valuePump == 0){
-            togglePump.isChecked = false
+            buttonSendPumpOn.setBackgroundColor(Color.RED)
+            buttonSendPumpOff.setBackgroundColor(Color.GREEN)
         }
-        else if(valuePump == 1){
-            togglePump.isChecked = true
+        if(valuePump == 1){
+            buttonSendPumpOn.setBackgroundColor(Color.GREEN)
+            buttonSendPumpOff.setBackgroundColor(Color.RED)
         }
     }
     private fun getAllData() {
@@ -256,6 +259,47 @@ class MainActivity : AppCompatActivity(){
             }
         }
         handler.post(runnable)
+    }
+    private fun sendDataSchedule(field: String) {
+        val asyncTask: AsyncTask<*, *, *> = object : AsyncTask<Any?, Any?, Any?>() {
+            override fun doInBackground(objects: Array<Any?>): Any? {
+                val client = OkHttpClient()
+                val request: Request = Request.Builder()
+                        .url("https://api.thingspeak.com/update?api_key=RYJZ0Z5C6TH9U5MC&field" + field)
+                        .build()
+                var response: Response? = null
+                try {
+                    response = client.newCall(request).execute()
+                    return response.body().string()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+                return null
+            }
+        }.execute()
+    }
+    private fun getDataSchedule(txt: TextView, field: String){
+        val asyncTask: AsyncTask<*, *, *> = object : AsyncTask<Any?, Any?, Any?>() {
+            override fun doInBackground(objects: Array<Any?>): Any? {
+                val client = OkHttpClient()
+                val request: Request = Request.Builder()
+                        .url("https://api.thingspeak.com/channels/1396075/fields/" + field + "/last.json?api_key=1H2NTVVL6RYRDV8Y&results=2")
+                        .build()
+                var response: Response? = null
+                try {
+                    response = client.newCall(request).execute()
+                    return response.body().string()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+                return null
+            }
+
+            override fun onPostExecute(o: Any?) {
+                val data = o.toString()
+                txt.text = o.toString().substring(data.lastIndexOf("\":\"") + 3, data.lastIndexOf("\""))
+            }
+        }.execute()
     }
     private fun sendData(field: String) {
         val asyncTask: AsyncTask<*, *, *> = object : AsyncTask<Any?, Any?, Any?>() {
@@ -275,7 +319,7 @@ class MainActivity : AppCompatActivity(){
             }
         }.execute()
     }
-    private fun getData(txt: TextView, field: String, z: Int){
+    private fun getData(txt: TextView, field: String, id: Int){
         val asyncTask: AsyncTask<*, *, *> = object : AsyncTask<Any?, Any?, Any?>() {
             override fun doInBackground(objects: Array<Any?>): Any? {
                 val client = OkHttpClient()
@@ -294,13 +338,13 @@ class MainActivity : AppCompatActivity(){
 
             override fun onPostExecute(o: Any?) {
                 val data = o.toString()
-                if(z == 2) {
+                if(id == 2) {
                     txt.text = o.toString().substring(data.lastIndexOf("\":\"") + 3, data.lastIndexOf("\"")) + " \u2103"
                 }
-                if(z == 1) {
+                if(id == 1) {
                     txt.text = o.toString().substring(data.lastIndexOf("\":\"") + 3, data.lastIndexOf("\"")) + "%"
                 }
-                if(z ==3){
+                if(id == 3){
                     val soil = o.toString().substring(data.lastIndexOf("\":\"") + 3, data.lastIndexOf("\"")).toInt()
                     if(soil==0){
                         txt.text = "Dry"
@@ -309,53 +353,21 @@ class MainActivity : AppCompatActivity(){
                         txt.text = "Wet"
                     }
                 }
-                if(z == 4) {
+                if(id == 4) {
                     txt.text = o.toString().substring(data.lastIndexOf("\":\"") + 3, data.lastIndexOf("\""))
                 }
-                if(z == 5) {
+                if(id == 5) {
                     txt.text = o.toString().substring(data.lastIndexOf("\":\"") + 3, data.lastIndexOf("\""))
                 }
             }
         }.execute()
-
-    }
-    private fun onClickTime() {
-        timePicker.setIs24HourView(true)
-        timePicker.setOnTimeChangedListener { _, hour, minute -> var hour = hour
-            if (textViewTypeTime != null) {
-                val hour = hour
-                val min = if (minute < 10) "0$minute" else minute
-
-                val msg = "$hour : $min "
-                textViewTypeTime.text = msg
-                textViewTypeTime.visibility = ViewGroup.VISIBLE
-            }
-        }
-
-    }
-    private fun onClickDuration() {
-        durationPicker.setIs24HourView(true)
-        durationPicker.setOnTimeChangedListener { _, hour, minute -> var hour = hour
-            if (textViewTypeDuration != null) {
-                val hour = hour
-                val min = if (minute < 10) "0$minute" else minute
-
-                val msg = "$hour h and $min min"
-                textViewTypeDuration.text = msg
-                textViewTypeDuration.visibility = ViewGroup.VISIBLE
-            }
-        }
-
     }
     private fun turnScheduleOptions(turn: Int){
         if(turn == 0){
             textViewStartTime.visibility = View.INVISIBLE
             textViewDuration.visibility = View.INVISIBLE
-            textViewRepeat.visibility = View.INVISIBLE
             textViewTypeDuration.visibility = View.INVISIBLE
-            durationPicker.visibility = View.INVISIBLE
             textViewTypeTime.visibility = View.INVISIBLE
-            timePicker.visibility = View.INVISIBLE
             checkBoxMo.visibility = View.INVISIBLE
             checkBoxTu.visibility = View.INVISIBLE
             checkBoxWe.visibility = View.INVISIBLE
@@ -363,15 +375,18 @@ class MainActivity : AppCompatActivity(){
             checkBoxFr.visibility = View.INVISIBLE
             checkBoxSa.visibility = View.INVISIBLE
             checkBoxSu.visibility = View.INVISIBLE
+            numberPickerStartHour.visibility = View.INVISIBLE
+            numberPickerDurationHour.visibility = View.INVISIBLE
+            buttonSendStart.visibility = View.INVISIBLE
+            buttonSendDuration.visibility = View.INVISIBLE
+            buttonConfigure.visibility = View.INVISIBLE
+            buttonSave.visibility = View.INVISIBLE
         }
         else{
             textViewStartTime.visibility = View.VISIBLE
             textViewDuration.visibility = View.VISIBLE
-            textViewRepeat.visibility = View.VISIBLE
             textViewTypeDuration.visibility = View.VISIBLE
-            durationPicker.visibility = View.VISIBLE
             textViewTypeTime.visibility = View.VISIBLE
-            timePicker.visibility = View.VISIBLE
             checkBoxMo.visibility = View.VISIBLE
             checkBoxTu.visibility = View.VISIBLE
             checkBoxWe.visibility = View.VISIBLE
@@ -379,19 +394,24 @@ class MainActivity : AppCompatActivity(){
             checkBoxFr.visibility = View.VISIBLE
             checkBoxSa.visibility = View.VISIBLE
             checkBoxSu.visibility = View.VISIBLE
+            numberPickerStartHour.visibility = View.VISIBLE
+            numberPickerDurationHour.visibility = View.VISIBLE
+            buttonSendStart.visibility = View.VISIBLE
+            buttonSendDuration.visibility = View.VISIBLE
+            buttonConfigure.visibility = View.VISIBLE
+            buttonSave.visibility = View.VISIBLE
         }
-
     }
     private fun turnManualOptions(turn: Int){
         if(turn == 0){
             textViewPump.visibility = View.INVISIBLE
-            togglePump.visibility = View.INVISIBLE
+            buttonSendPumpOn.visibility = View.INVISIBLE
+            buttonSendPumpOff.visibility = View.INVISIBLE
         }
         else{
             textViewPump.visibility = View.VISIBLE
-            togglePump.visibility = View.VISIBLE
+            buttonSendPumpOn.visibility = View.VISIBLE
+            buttonSendPumpOff.visibility = View.VISIBLE
         }
-
     }
-
 }
