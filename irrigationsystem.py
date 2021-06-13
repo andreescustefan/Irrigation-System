@@ -23,8 +23,6 @@ readSaURL = 'https://api.thingspeak.com/channels/1396075/fields/6/last.json?api_
 readSuURL = 'https://api.thingspeak.com/channels/1396075/fields/7/last.json?api_key=%s' % API_read_schedule
 readConfigURL = 'https://api.thingspeak.com/channels/1396075/fields/8/last.json?api_key=%s' % API_read_schedule
 
-
-
 API_read = 'GATCL5J9R1VLH7ML&results=2'
 readmodeURL = 'https://api.thingspeak.com/channels/939407/fields/4/last.json?api_key=%s' % API_read
 readpumpURL = 'https://api.thingspeak.com/channels/939407/fields/5/last.json?api_key=%s' % API_read
