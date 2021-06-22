@@ -8,6 +8,7 @@ import Adafruit_DHT
 from gpiozero import LED
 import schedule
 import time
+import os
 
 #Thingspeak
 API_write = 'TABU7D2OUI5TVGG5'
@@ -23,10 +24,13 @@ readSaURL = 'https://api.thingspeak.com/channels/1396075/fields/6/last.json?api_
 readSuURL = 'https://api.thingspeak.com/channels/1396075/fields/7/last.json?api_key=%s' % API_read_schedule
 readConfigURL = 'https://api.thingspeak.com/channels/1396075/fields/8/last.json?api_key=%s' % API_read_schedule
 
+
+
 API_read = 'GATCL5J9R1VLH7ML&results=2'
 readmodeURL = 'https://api.thingspeak.com/channels/939407/fields/4/last.json?api_key=%s' % API_read
 readpumpURL = 'https://api.thingspeak.com/channels/939407/fields/5/last.json?api_key=%s' % API_read
 readstartURL = 'https://api.thingspeak.com/channels/939407/fields/6/last.json?api_key=%s' % API_read
+readstartminURL = 'https://api.thingspeak.com/channels/939407/fields/8/last.json?api_key=%s' % API_read
 readdurationURL = 'https://api.thingspeak.com/channels/939407/fields/7/last.json?api_key=%s' % API_read
 
 #GPIO_SETUP
@@ -92,6 +96,8 @@ def read_time_data(url, id):
         result = data.find('field6')
     if id == 7:
         result = data.find('field7')
+    if id == 8:
+        result = data.find('field8')
     index = result+9
     index2 = data.find('"}')
     return str(data[index:index2])
@@ -166,126 +172,169 @@ def mode(turn):
     if turn == 2:
         if read_ready_data(readConfigURL) == 1:
             startHour = read_time_data(readstartURL, 6)
-            durationHour = read_time_data(readdurationURL, 7)
-            print(startHour + ":" + durationHour)
+            startMin = read_time_data(readstartminURL, 8)
+            durationMin = read_time_data(readdurationURL, 7)
+            if (int(startMin) + int(durationMin)) > 59:
+                durationHour = str(int(startHour) + 1)
+                durationMin = str(int(startMin)+int(durationMin) - 60)
+            else:
+                durationHour = startHour
+                durationMin = str(int(startMin) + int(durationMin))
+            print(str(startHour) + " : " + str(startMin))
+            print(durationHour + " : " + durationMin)
             if read_schedule_data(readMoURL,1) == 10:
                 schedule.every().monday.at("00:00").do(job_off)
                 print("Mo: OFF")
             if read_schedule_data(readMoURL,1) == 11:
-                if int(startHour) > 9 and int(durationHour) > 9:
-                    schedule.every().monday.at(startHour+":00").do(job_on)
-                    schedule.every().monday.at(startHour+":"+durationHour).do(job_off)
-                if int(startHour) < 10 and int(durationHour) < 10:
-                    schedule.every().monday.at("0"+startHour+":00").do(job_on)
-                    schedule.every().monday.at("0"+startHour+":0"+durationHour).do(job_off)
-                if int(startHour) > 9 and int(durationHour) < 10:
-                    schedule.every().monday.at(startHour+":00").do(job_on)
-                    schedule.every().monday.at(startHour+":0"+durationHour).do(job_off)
-                if int(startHour) < 10 and int(durationHour) > 9:
-                    schedule.every().monday.at("0"+startHour+":00").do(job_on)
-                    schedule.every().monday.at("0"+startHour+":"+durationHour).do(job_off)
+                if int(startHour) > 9 and int(startMin) > 9:
+                    schedule.every().monday.at(startHour+":"+startMin).do(job_on)
+                if int(startHour) < 10 and int(startMin) < 10:
+                    schedule.every().monday.at("0"+startHour+":0"+startMin).do(job_on)
+                if int(startHour) > 9 and int(startMin) < 10:
+                    schedule.every().monday.at(startHour+":0"+startMin).do(job_on)
+                if int(startHour) < 10 and int(startMin) > 9:
+                    schedule.every().monday.at("0"+startHour+":"+startMin).do(job_on)
+                    
+                if int(durationHour) > 9 and int(durationMin) > 9:
+                    schedule.every().monday.at(durationHour+":"+durationMin).do(job_off)
+                if int(durationHour) < 10 and int(durationMin) < 10:
+                    schedule.every().monday.at("0"+durationHour+":0"+durationMin).do(job_off)
+                if int(durationHour) > 9 and int(durationMin) < 10:
+                    schedule.every().monday.at(durationHour+":0"+durationMin).do(job_off)
+                if int(durationHour) < 10 and int(durationMin) > 9:
+                    schedule.every().monday.at("0"+durationHour+":"+durationMin).do(job_off)
                 print("Mo: ON")
             if read_schedule_data(readTuURL,2) == 20:
                 schedule.every().tuesday.at("00:00").do(job_off)
                 print("Tu: OFF")
             if read_schedule_data(readTuURL,2) == 21:
-                if int(startHour) > 9 and int(durationHour) > 9:
-                    schedule.every().tuesday.at(startHour+":00").do(job_on)
-                    schedule.every().tuesday.at(startHour+":"+durationHour).do(job_off)
-                if int(startHour) < 10 and int(durationHour) < 10:
-                    schedule.every().tuesday.at("0"+startHour+":00").do(job_on)
-                    schedule.every().tuesday.at("0"+startHour+":0"+durationHour).do(job_off)
-                if int(startHour) > 9 and int(durationHour) < 10:
-                    schedule.every().tuesday.at(startHour+":00").do(job_on)
-                    schedule.every().tuesday.at(startHour+":0"+durationHour).do(job_off)
-                if int(startHour) < 10 and int(durationHour) > 9:
-                    schedule.every().tuesday.at("0"+startHour+":00").do(job_on)
-                    schedule.every().tuesday.at("0"+startHour+":"+durationHour).do(job_off)
+                if int(startHour) > 9 and int(startMin) > 9:
+                    schedule.every().tuesday.at(startHour+":"+startMin).do(job_on)
+                if int(startHour) < 10 and int(startMin) < 10:
+                    schedule.every().tuesday.at("0"+startHour+":0"+startMin).do(job_on)
+                if int(startHour) > 9 and int(startMin) < 10:
+                    schedule.every().tuesday.at(startHour+":0"+startMin).do(job_on)
+                if int(startHour) < 10 and int(startMin) > 9:
+                    schedule.every().tuesday.at("0"+startHour+":"+startMin).do(job_on)
+                    
+                if int(durationHour) > 9 and int(durationMin) > 9:
+                    schedule.every().tuesday.at(durationHour+":"+durationMin).do(job_off)
+                if int(durationHour) < 10 and int(durationMin) < 10:
+                    schedule.every().tuesday.at("0"+durationHour+":0"+durationMin).do(job_off)
+                if int(durationHour) > 9 and int(durationMin) < 10:
+                    schedule.every().tuesday.at(durationHour+":0"+durationMin).do(job_off)
+                if int(durationHour) < 10 and int(durationMin) > 9:
+                    schedule.every().tuesday.at("0"+durationHour+":"+durationMin).do(job_off)
                 print("Tu: ON")
             if read_schedule_data(readWeURL,3) == 30:
                 schedule.every().wednesday.at("00:00").do(job_off)
                 print("We: OFF")
             if read_schedule_data(readWeURL,3) == 31:
-                if int(startHour) > 9 and int(durationHour) > 9:
-                    schedule.every().wednesday.at(startHour+":00").do(job_on)
-                    schedule.every().wednesday.at(startHour+":"+durationHour).do(job_off)
-                if int(startHour) < 10 and int(durationHour) < 10:
-                    schedule.every().wednesday.at("0"+startHour+":00").do(job_on)
-                    schedule.every().wednesday.at("0"+startHour+":0"+durationHour).do(job_off)
-                if int(startHour) > 9 and int(durationHour) < 10:
-                    schedule.every().wednesday.at(startHour+":00").do(job_on)
-                    schedule.every().wednesday.at(startHour+":0"+durationHour).do(job_off)
-                if int(startHour) < 10 and int(durationHour) > 9:
-                    schedule.every().wednesday.at("0"+startHour+":00").do(job_on)
-                    schedule.every().wednesday.at("0"+startHour+":"+durationHour).do(job_off)
+                if int(startHour) > 9 and int(startMin) > 9:
+                    schedule.every().wednesday.at(startHour+":"+startMin).do(job_on)
+                if int(startHour) < 10 and int(startMin) < 10:
+                    schedule.every().wednesday.at("0"+startHour+":0"+startMin).do(job_on)
+                if int(startHour) > 9 and int(startMin) < 10:
+                    schedule.every().wednesday.at(startHour+":0"+startMin).do(job_on)
+                if int(startHour) < 10 and int(startMin) > 9:
+                    schedule.every().wednesday.at("0"+startHour+":"+startMin).do(job_on)
+                    
+                if int(durationHour) > 9 and int(durationMin) > 9:
+                    schedule.every().wednesday.at(durationHour+":"+durationMin).do(job_off)
+                if int(durationHour) < 10 and int(durationMin) < 10:
+                    schedule.every().wednesday.at("0"+durationHour+":0"+durationMin).do(job_off)
+                if int(durationHour) > 9 and int(durationMin) < 10:
+                    schedule.every().wednesday.at(durationHour+":0"+durationMin).do(job_off)
+                if int(durationHour) < 10 and int(durationMin) > 9:
+                    schedule.every().wednesday.at("0"+durationHour+":"+durationMin).do(job_off)
                 print("We: ON")
             if read_schedule_data(readThURL,4) == 40:
                 schedule.every().thursday.at("00:00").do(job_off)
                 print("Th: OFF")
             if read_schedule_data(readThURL,4) == 41:
-                if int(startHour) > 9 and int(durationHour) > 9:
-                    schedule.every().thursday.at(startHour+":00").do(job_on)
-                    schedule.every().thursday.at(startHour+":"+durationHour).do(job_off)
-                if int(startHour) < 10 and int(durationHour) < 10:
-                    schedule.every().thursday.at("0"+startHour+":00").do(job_on)
-                    schedule.every().thursday.at("0"+startHour+":0"+durationHour).do(job_off)
-                if int(startHour) > 9 and int(durationHour) < 10:
-                    schedule.every().thursday.at(startHour+":00").do(job_on)
-                    schedule.every().thursday.at(startHour+":0"+durationHour).do(job_off)
-                if int(startHour) < 10 and int(durationHour) > 9:
-                    schedule.every().thursday.at("0"+startHour+":00").do(job_on)
-                    schedule.every().thursday.at("0"+startHour+":"+durationHour).do(job_off)
+                if int(startHour) > 9 and int(startMin) > 9:
+                    schedule.every().thursday.at(startHour+":"+startMin).do(job_on)
+                if int(startHour) < 10 and int(startMin) < 10:
+                    schedule.every().thursday.at("0"+startHour+":0"+startMin).do(job_on)
+                if int(startHour) > 9 and int(startMin) < 10:
+                    schedule.every().thursday.at(startHour+":0"+startMin).do(job_on)
+                if int(startHour) < 10 and int(startMin) > 9:
+                    schedule.every().thursday.at("0"+startHour+":"+startMin).do(job_on)
+                    
+                if int(durationHour) > 9 and int(durationMin) > 9:
+                    schedule.every().thursday.at(durationHour+":"+durationMin).do(job_off)
+                if int(durationHour) < 10 and int(durationMin) < 10:
+                    schedule.every().thursday.at("0"+durationHour+":0"+durationMin).do(job_off)
+                if int(durationHour) > 9 and int(durationMin) < 10:
+                    schedule.every().thursday.at(durationHour+":0"+durationMin).do(job_off)
+                if int(durationHour) < 10 and int(durationMin) > 9:
+                    schedule.every().thursday.at("0"+durationHour+":"+durationMin).do(job_off)
                 print("Th: ON")
             if read_schedule_data(readFrURL,5) == 50:
                 schedule.every().friday.at("00:00").do(job_off)
                 print("Fr: OFF")
             if read_schedule_data(readFrURL,5) == 51:
-                if int(startHour) > 9 and int(durationHour) > 9:
-                    schedule.every().friday.at(startHour+":00").do(job_on)
-                    schedule.every().friday.at(startHour+":"+durationHour).do(job_off)
-                if int(startHour) < 10 and int(durationHour) < 10:
-                    schedule.every().friday.at("0"+startHour+":00").do(job_on)
-                    schedule.every().friday.at("0"+startHour+":0"+durationHour).do(job_off)
-                if int(startHour) > 9 and int(durationHour) < 10:
-                    schedule.every().friday.at(startHour+":00").do(job_on)
-                    schedule.every().friday.at(startHour+":0"+durationHour).do(job_off)
-                if int(startHour) < 10 and int(durationHour) > 9:
-                    schedule.every().friday.at("0"+startHour+":00").do(job_on)
-                    schedule.every().friday.at("0"+startHour+":"+durationHour).do(job_off)
+                if int(startHour) > 9 and int(startMin) > 9:
+                    schedule.every().friday.at(startHour+":"+startMin).do(job_on)
+                if int(startHour) < 10 and int(startMin) < 10:
+                    schedule.every().friday.at("0"+startHour+":0"+startMin).do(job_on)
+                if int(startHour) > 9 and int(startMin) < 10:
+                    schedule.every().friday.at(startHour+":0"+startMin).do(job_on)
+                if int(startHour) < 10 and int(startMin) > 9:
+                    schedule.every().friday.at("0"+startHour+":"+startMin).do(job_on)
+                    
+                if int(durationHour) > 9 and int(durationMin) > 9:
+                    schedule.every().friday.at(durationHour+":"+durationMin).do(job_off)
+                if int(durationHour) < 10 and int(durationMin) < 10:
+                    schedule.every().friday.at("0"+durationHour+":0"+durationMin).do(job_off)
+                if int(durationHour) > 9 and int(durationMin) < 10:
+                    schedule.every().friday.at(durationHour+":0"+durationMin).do(job_off)
+                if int(durationHour) < 10 and int(durationMin) > 9:
+                    schedule.every().friday.at("0"+durationHour+":"+durationMin).do(job_off)
                 print("Fr: ON")
             if read_schedule_data(readSaURL,6) == 60:
                 schedule.every().saturday.at("00:00").do(job_off)
                 print("Sa: OFF")
             if read_schedule_data(readSaURL,6) == 61:
-                if int(startHour) > 9 and int(durationHour) > 9:
-                    schedule.every().saturday.at(startHour+":00").do(job_on)
-                    schedule.every().saturday.at(startHour+":"+durationHour).do(job_off)
-                if int(startHour) < 10 and int(durationHour) < 10:
-                    schedule.every().saturday.at("0"+startHour+":00").do(job_on)
-                    schedule.every().saturday.at("0"+startHour+":0"+durationHour).do(job_off)
-                if int(startHour) > 9 and int(durationHour) < 10:
-                    schedule.every().saturday.at(startHour+":00").do(job_on)
-                    schedule.every().saturday.at(startHour+":0"+durationHour).do(job_off)
-                if int(startHour) < 10 and int(durationHour) > 9:
-                    schedule.every().saturday.at("0"+startHour+":00").do(job_on)
-                    schedule.every().saturday.at("0"+startHour+":"+durationHour).do(job_off)
+                if int(startHour) > 9 and int(startMin) > 9:
+                    schedule.every().saturday.at(startHour+":"+startMin).do(job_on)
+                if int(startHour) < 10 and int(startMin) < 10:
+                    schedule.every().saturday.at("0"+startHour+":0"+startMin).do(job_on)
+                if int(startHour) > 9 and int(startMin) < 10:
+                    schedule.every().saturday.at(startHour+":0"+startMin).do(job_on)
+                if int(startHour) < 10 and int(startMin) > 9:
+                    schedule.every().saturday.at("0"+startHour+":"+startMin).do(job_on)
+                    
+                if int(durationHour) > 9 and int(durationMin) > 9:
+                    schedule.every().saturday.at(durationHour+":"+durationMin).do(job_off)
+                if int(durationHour) < 10 and int(durationMin) < 10:
+                    schedule.every().saturday.at("0"+durationHour+":0"+durationMin).do(job_off)
+                if int(durationHour) > 9 and int(durationMin) < 10:
+                    schedule.every().saturday.at(durationHour+":0"+durationMin).do(job_off)
+                if int(durationHour) < 10 and int(durationMin) > 9:
+                    schedule.every().saturday.at("0"+durationHour+":"+durationMin).do(job_off)
                 print("Sa: ON")
             if read_schedule_data(readSuURL,7) == 70:
                 schedule.every().sunday.at("00:00").do(job_off)
                 print("Su: OFF")
             if read_schedule_data(readSuURL,7) == 71:
-                if int(startHour) > 9 and int(durationHour) > 9:
-                    schedule.every().sunday.at(startHour+":00").do(job_on)
-                    schedule.every().sunday.at(startHour+":"+durationHour).do(job_off)
-                if int(startHour) < 10 and int(durationHour) < 10:
-                    schedule.every().sunday.at("0"+startHour+":00").do(job_on)
-                    schedule.every().sunday.at("0"+startHour+":0"+durationHour).do(job_off)
-                if int(startHour) > 9 and int(durationHour) < 10:
-                    schedule.every().sunday.at(startHour+":00").do(job_on)
-                    schedule.every().sunday.at(startHour+":0"+durationHour).do(job_off)
-                if int(startHour) < 10 and int(durationHour) > 9:
-                    schedule.every().sunday.at("0"+startHour+":00").do(job_on)
-                    schedule.every().sunday.at("0"+startHour+":"+durationHour).do(job_off)
+                if int(startHour) > 9 and int(startMin) > 9:
+                    schedule.every().sunday.at(startHour+":"+startMin).do(job_on)
+                if int(startHour) < 10 and int(startMin) < 10:
+                    schedule.every().sunday.at("0"+startHour+":0"+startMin).do(job_on)
+                if int(startHour) > 9 and int(startMin) < 10:
+                    schedule.every().sunday.at(startHour+":0"+startMin).do(job_on)
+                if int(startHour) < 10 and int(startMin) > 9:
+                    schedule.every().sunday.at("0"+startHour+":"+startMin).do(job_on)
+                    
+                if int(durationHour) > 9 and int(durationMin) > 9:
+                    schedule.every().sunday.at(durationHour+":"+durationMin).do(job_off)
+                if int(durationHour) < 10 and int(durationMin) < 10:
+                    schedule.every().sunday.at("0"+durationHour+":0"+durationMin).do(job_off)
+                if int(durationHour) > 9 and int(durationMin) < 10:
+                    schedule.every().sunday.at(durationHour+":0"+durationMin).do(job_off)
+                if int(durationHour) < 10 and int(durationMin) > 9:
+                    schedule.every().sunday.at("0"+durationHour+":"+durationMin).do(job_off)
                 print("Su: ON")
 
 while True:
@@ -314,4 +363,7 @@ while True:
         break
 
 GPIO.cleanup()
+
+
+
 
